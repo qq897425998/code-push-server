@@ -119,7 +119,7 @@ $ vim config/config.js
   local: {
     storageDir: "/Users/tablee/workspaces/storage",
     //文件下载地址 CodePush Server 地址 + '/download' download对应app.js里面的地址
-    downloadUrl: "http://localhost:3000/download",
+    downloadUrl: "http://localhost:30001download",
     // public static download spacename.
     public: '/download'
   },
