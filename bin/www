@@ -9,10 +9,12 @@ var http = require('http');
 var validator = require('validator')
 var _ = require('lodash')
 var config = require('../core/config');
+
 log4js.configure(_.get(config, 'log4js', {
     appenders: {console: { type: 'console'}},
     categories : { default: { appenders: ['console'], level: 'info' }}
 }));
+
 var log = log4js.getLogger("startup")
 
 var app = require('../app');
@@ -40,7 +42,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = http.createServer(app); 
 
 /**
  * Listen on provided port, on all network interfaces.

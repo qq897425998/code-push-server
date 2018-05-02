@@ -8,6 +8,8 @@ var path   = require('path');
 var _   = require('lodash');
 var mysql = require('mysql2');
 var Promise = require("bluebird");
+
+
 var yargs = require('yargs')
     .usage('Usage: $0 <command> [options]')
     .command('init', '初始化数据库', {
@@ -44,26 +46,26 @@ if (command === 'init') {
         port: dbport
     });
     var createDatabaseSql = argv.force ? `CREATE DATABASE IF NOT EXISTS ${dbname}` :
-        `CREATE DATABASE ${dbname}`;
+        `CREATE DATABASE ${dbname}`; //创建数据库
     Promise.promisifyAll(connection);
-    connection.connect();
-    connection.queryAsync(createDatabaseSql)
+    connection.connect(); //链接mysql
+    connection.queryAsync(createDatabaseSql) //执行sql语句
     .then(function(){
         connection2 = mysql.createConnection({
             host: dbhost,
             user: dbuser,
             password: dbpassword,
             database: dbname,
-            multipleStatements: true,
+            multipleStatements: true,  //??? 这个参数connection没有  ( 这里 两个connection 一个用于创建数据 一个用于建表)
             port: dbport
         });
         connection2.connect();
         Promise.promisifyAll(connection2);
-        return connection2;
+        return connection2; //创建一个链接对象
     })
     .then(function(connection2){
         var sql = fs.readFileSync(path.resolve(__dirname, '../sql/codepush-all.sql'), 'utf-8');
-        return connection2.queryAsync(sql);
+        return connection2.queryAsync(sql); //执行文件中的sql语句 (创建相应的表和字段)
     })
     .then(function(){
         console.log('success.');
@@ -72,7 +74,7 @@ if (command === 'init') {
         console.log(e);
     })
     .finally(function(){
-        if(connection) connection.end();
+        if(connection) connection.end(); //关闭链接
         if(connection2) connection2.end()
     });
 } else if (command == 'upgrade'){
@@ -119,5 +121,5 @@ if (command === 'init') {
         if(connection) connection.end();
     });
 } else {
-    yargs.showHelp();
+    yargs.showHelp();  //不属于两个终端命令显示 help
 }
